@@ -1,8 +1,13 @@
 const bcrypt = require("bcryptjs");
-const User = require("../models/userModel");
+const User = require("../../models/userModels/userModels");
 
 const signUpController = async (req, res) => {
-  const { username, password, role, fname, lname } = req.body;
+  console.log("[SignUpController]: frontend request", req?.body)
+  const { username, password, role, fname, lname } = req?.body;
+
+  if (!username || !password || !role) {
+    return res.json({msg: "Error username, password, role not provided."})
+  }
 
   try {
     const existingUser = await User.findOne({ username });
@@ -30,4 +35,9 @@ const signUpController = async (req, res) => {
   }
 };
 
-module.exports = {signUpController, };
+
+const loginController = async (req, res) => {
+
+}
+
+module.exports = { signUpController, loginController, };

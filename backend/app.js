@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require("express");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRoutes/authRoutes")
@@ -5,10 +6,14 @@ const authRouter = require("./routes/authRoutes/authRoutes")
 const app = express();
 const port = 3000;
 
+
+// middlewares
+app.use(express.json())
+
 //routers
-app.use("auth", authRouter)
+app.use("/auth", authRouter)
 app.get("/", (req, res) => {
-  res.send({msg: "Request successfull!"})
+  res.send({ msg: "Request successfull!" })
 })
 
 async function start() {
