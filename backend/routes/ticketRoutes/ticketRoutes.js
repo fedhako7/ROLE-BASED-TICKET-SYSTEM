@@ -8,7 +8,7 @@ const {
 
 router.post("/", createTicketController)
 router.get("/", getTicketController)
-router.put("/", updateTicketController)
+router.put("/:id", updateTicketController)
 
 
 module.exports = router
