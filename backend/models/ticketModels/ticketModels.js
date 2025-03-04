@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const TicketSchema = new mongoose.Schema(
   {
@@ -12,6 +11,5 @@ const TicketSchema = new mongoose.Schema(
   { timestamps: { createdAt: "created_at", updatedAt: "last_updated_at" } }
 );
 
-TicketSchema.plugin(AutoIncrement, { inc_field: "id" });
 
 module.exports = mongoose.model("Ticket", TicketSchema);
