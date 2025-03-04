@@ -1,13 +1,14 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/userModels/userModels");
+const status_codes = require("http-status-codes")
 
 const signUpController = async (req, res) => {
   console.log("[SignUpController]: frontend request", req?.body)
   const { username, password, role, fname, lname } = req?.body;
 
   if (!username || !password || !role) {
-    return res.json({msg: "Error username, password, role not provided."})
+    return res.json({ msg: "Error username, password, role not provided." })
   }
 
   try {
@@ -56,7 +57,7 @@ const loginController = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       JWT_SECRET,
-      { expiresIn: "1h" } 
+      { expiresIn: "1d" }
     );
 
     res.status(200).json({
@@ -71,4 +72,10 @@ const loginController = async (req, res) => {
 };
 
 
-module.exports = { signUpController, loginController, };
+const checkController = async (req, res) => {
+  const user = req?.user
+  res.status(status_codes.OK).json({ msg: "Valid user", user })
+}
+
+
+module.exports = { signUpController, loginController, checkController, };
