@@ -5,7 +5,7 @@ const status_codes = require("http-status-codes")
 
 const signUpController = async (req, res) => {
   console.log("[SignUpController]: frontend request", req?.body)
-  const { username, password, role, fname, lname } = req?.body;
+  const { username, password, role, name } = req?.body;
 
   if (!username || !password || !role) {
     return res.json({ msg: "Error username, password, role not provided." })
@@ -23,8 +23,7 @@ const signUpController = async (req, res) => {
       username,
       hashedPassword,
       role,
-      fname,
-      lname,
+      name,
     });
 
     await newUser.save();
