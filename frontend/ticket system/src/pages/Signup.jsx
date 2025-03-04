@@ -32,6 +32,7 @@ function Signup() {
   return (
     <div className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+      <BackendError backendError={backendError} />
       <form onSubmit={handleSubmit}>
 
         <InputField
@@ -67,7 +68,6 @@ function Signup() {
             <option value="admin">Admin</option>
           </select>
         </div>
-       <BackendError backendError={backendError} />
 
         <Button
           type="submit"
