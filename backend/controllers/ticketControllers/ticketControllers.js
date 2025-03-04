@@ -5,7 +5,9 @@ const roles = require("../roles/roles");
 
 const createTicketController = async (req, res) => {
   const { title, description } = req.body;
+  
   const user_id = req.user.userId;
+  console.log("t, d, u", title, description, user_id)
 
   if (!title || !description || !user_id) {
     return res.status(status_codes.BAD_REQUEST).json({msg: "title, descriptions or user_id not provided."})

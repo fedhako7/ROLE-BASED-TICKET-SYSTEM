@@ -77,5 +77,9 @@ const checkController = async (req, res) => {
   res.status(status_codes.OK).json({ msg: "Valid user", user })
 }
 
+const meController =  (req, res) => {
+  res.json({ user: req.user });
+}
 
-module.exports = { signUpController, loginController, checkController, };
+
+module.exports = { signUpController, loginController, checkController, meController, };
