@@ -1,4 +1,5 @@
 require("dotenv").config()
+const cors = require("cors")
 const express = require("express");
 const mongoose = require("mongoose");
 const authRouter = require("./routes/authRoutes/authRoutes")
@@ -7,6 +8,14 @@ const authMiddleware = require("./authMiddleWare/authMiddleWare");
 
 const app = express();
 const port = 3000;
+
+
+// Enable CORS for all origins, as I'm not sure who checks my application
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 
 // middlewares
