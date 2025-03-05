@@ -8,6 +8,7 @@ function UserDashboard() {
   const [tickets, setTickets] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [error, setError] = useState('')
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -18,12 +19,13 @@ function UserDashboard() {
       try {
         const response = await api.get('/ticket', {
           headers: {
-            Authorization: 'Bearer ' + token 
+            Authorization: 'Bearer ' + token
           }
         });
         setTickets(response.data.tickets);
       } catch (error) {
         console.error('Failed to fetch tickets:', error);
+        setError('Failed to fetch tickets')
       }
     };
     fetchTickets();
@@ -37,6 +39,7 @@ function UserDashboard() {
       setTitle('');
       setDescription('');
     } catch (error) {
+      setError('Failed to create ticket')
       console.error('Failed to create ticket:', error);
     }
   };
@@ -85,13 +88,16 @@ function UserDashboard() {
       </form>
       <h3 className="text-xl font-semibold mb-4">My Tickets</h3>
       <ul>
-        {tickets.map((ticket) => (
-          <li key={ticket._id} className="mb-4 p-4 bg-gray-100 rounded">
-            <h4 className="font-bold">{ticket?.title}</h4>
-            <p>{ticket?.description}</p>
-            <p className="text-sm text-gray-600">Status: {ticket?.status}</p>
-          </li>
-        ))}
+        {
+          tickets.length !== 0
+            ? tickets.map((ticket, index) => (
+              <li key={index} className="mb-4 p-4 bg-gray-100 rounded">
+                <h4 className="font-bold">{ticket?.title}</h4>
+                <p>{ticket?.description}</p>
+                <p className="text-sm text-gray-600">Status: {ticket?.status}</p>
+              </li>
+            )) : <div> Create tickets to see them here. </div>
+        }
       </ul>
     </div>
   );

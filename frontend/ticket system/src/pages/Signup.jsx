@@ -4,6 +4,7 @@ import api from '../api/api';
 import Button from '../components/ui/Button';
 import InputField from '../components/ui/InputField';
 import BackendError from '../components/ui/BackendError';
+import axiosError from './axiosError';
 
 function Signup() {
   const [name, setName] = useState('');
@@ -15,16 +16,15 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password.length < 6) {
+      return axiosError("Password can't be less than 6 characters.", setBackendError)
+    }
 
     try {
       await api.post('auth/sign-up', { name, username, password, role });
       navigate('/login');
     } catch (error) {
-      setBackendError(error?.data?.msg || error.message)
-
-      setTimeout(() => {
-        setBackendError("")
-      }, 3000)
+      axiosError(`${error.response?.data?.message}` || 'Sign up failed', setBackendError)
       console.error('Signup failed:', error);
     }
   };
