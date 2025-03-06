@@ -9,6 +9,7 @@ function UserDashboard() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
@@ -16,6 +17,7 @@ function UserDashboard() {
 
   useEffect(() => {
     const fetchTickets = async () => {
+      setIsLoading(true)
       try {
         const response = await api.get('/ticket', {
           headers: {
@@ -26,6 +28,8 @@ function UserDashboard() {
       } catch (error) {
         console.error('Failed to fetch tickets:', error);
         setError('Failed to fetch tickets')
+      } finally {
+        setIsLoading(false)
       }
     };
     fetchTickets();
@@ -35,9 +39,10 @@ function UserDashboard() {
     e.preventDefault();
     try {
       const response = await api.post('/ticket', { title, description });
-      setTickets([...tickets, response.data.tickets]);
+      setTickets([...tickets, response.data.ticket]);
       setTitle('');
       setDescription('');
+      alert('Ticket created')
     } catch (error) {
       setError('Failed to create ticket')
       console.error('Failed to create ticket:', error);
@@ -51,7 +56,7 @@ function UserDashboard() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-4xl bg-gray-200 mx-auto mt-10 mb-6 p-6 rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">User Dashboard</h2>
         <button
@@ -82,8 +87,13 @@ function UserDashboard() {
             required
           />
         </div>
-        <button type="submit" className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
-          Create Ticket
+        <button
+          disabled={isLoading}
+          type="submit"
+          className={`bg-blue-600 text-white p-2 rounded hover:bg-blue-700 
+        ${isLoading && 'cursor-not-allowed'} hover:bg-blue-800`}
+        >
+          {isLoading ? 'Please wait...' : 'Create Ticket'}
         </button>
       </form>
       <h3 className="text-xl font-semibold mb-4">My Tickets</h3>
