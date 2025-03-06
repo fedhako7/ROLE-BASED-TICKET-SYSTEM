@@ -54,7 +54,7 @@ const loginController = async (req, res) => {
     // Generate JWT token
     const JWT_SECRET = process.env.JWT_SECRET
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { userId: user._id, role: user.role, username: user.username },
       JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -73,9 +73,14 @@ const loginController = async (req, res) => {
 
 
 const checkController = async (req, res) => {
-  const user = req?.user
-  res.status(status_codes.OK).json({ msg: "Valid user", user })
-}
+  const user = req?.user; // User data from authMiddleware
+  if (!user) {
+    return res
+      .status(status_codes.UNAUTHORIZED)
+      .json({ message: "User not authenticated" });
+  }
+  res.status(status_codes.OK).json({ msg: "Valid user", user });
+};
 
 const meController =  (req, res) => {
   res.json({ user: req.user });
