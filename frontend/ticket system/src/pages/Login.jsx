@@ -31,7 +31,7 @@ function Login() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-md bg-white">
+    <div className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-md bg-gray-200">
       <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
       <BackendError backendError={backendError} />
       <form onSubmit={handleSubmit}>
