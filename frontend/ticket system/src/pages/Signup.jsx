@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import Button from '../components/ui/Button';
 import InputField from '../components/ui/InputField';
@@ -73,6 +73,15 @@ function Signup() {
           type="submit"
           btn="Sign Up"
         />
+        <p className=' mt-2 text-center'>
+          Already have an account?
+          <Link
+            to='/login'
+            className=' ml-2 text-blue-800'
+          >
+            Login
+          </Link>
+        </p>
 
       </form>
     </div>

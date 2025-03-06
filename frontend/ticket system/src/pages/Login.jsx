@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import { setCredentials } from '../store/slices/authSlice';
 import InputField from '../components/ui/InputField';
 import Button from '../components/ui/Button';
-import BackendError from '../components/ui/BackendError'; 
+import BackendError from '../components/ui/BackendError';
 import axiosError from './axiosError';
 
 function Login() {
@@ -49,8 +49,17 @@ function Login() {
         />
         <Button
           type="submit"
-          btn="Sign Up"
+          btn="Login"
         />
+        <p className=' mt-2 text-center'>
+          Do not have an account?
+          <Link
+            to='/signup'
+            className=' ml-2 text-blue-800'
+          >
+            Sign Up
+          </Link>
+        </p>
       </form>
     </div>
   );
