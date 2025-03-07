@@ -71,6 +71,7 @@ function Signup() {
 
         <Button
           type="submit"
+          handleClick={handleSubmit}
           btn="Sign Up"
         />
         <p className=' mt-2 text-center'>
