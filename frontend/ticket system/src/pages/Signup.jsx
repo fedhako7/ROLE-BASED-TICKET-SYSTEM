@@ -10,22 +10,51 @@ function Signup() {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState('');
   const [role, setRole] = useState('user');
   const [backendError, setBackendError] = useState('')
+  const [nameError, setNameError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
+
+
+  const handleNameChange = (val) => {
+    setName(val);
+    setNameError(
+      !/^[a-zA-Z]+$/.test(val) ? 'Only letters allowed' :
+      val.length < 2 ? 'Too short' : ''
+    );
+  };
+
+  const handleUsernameChange = (val) => {
+    setUsername(val);
+    setUsernameError(
+      !/^[a-zA-Z0-9_-]+$/.test(val) ? 'Only letters, numbers, - or _ allowed' :
+      val.length < 3 ? 'Too short' : ''
+    );
+  };
+
+  const handlePasswordChange = (val) => {
+    setPassword(val);
+    setPasswordError(val.length < 6 ? 'Too short' : '');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password.length < 6) {
-      return axiosError("Password can't be less than 6 characters.", setBackendError)
+    if (passwordError || usernameError || nameError) {
+      return axiosError("Fix errors before submitting.", setBackendError);
     }
 
+    setIsLoading(true)
     try {
       await api.post('auth/sign-up', { name, username, password, role });
       navigate('/login');
     } catch (error) {
-      axiosError(`${error.response?.data?.message}` || 'Sign up failed', setBackendError)
+      axiosError(`${error?.message}` || 'Sign up failed', setBackendError)
       console.error('Signup failed:', error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -39,21 +68,24 @@ function Signup() {
           label={"Name"}
           type={"text"}
           val={name}
-          setVal={setName}
+          onChange={handleNameChange}
+          error={nameError}
         />
 
         <InputField
           label={"Username"}
           type={"text"}
           val={username}
-          setVal={setUsername}
+          onChange={handleUsernameChange}
+          error={usernameError}
         />
 
         <InputField
           label={"Password"}
           type={"password"}
           val={password}
-          setVal={setPassword}
+          onChange={handlePasswordChange}
+          error={passwordError}
         />
 
 
@@ -71,8 +103,8 @@ function Signup() {
 
         <Button
           type="submit"
-          handleClick={handleSubmit}
           btn="Sign Up"
+          isLoading={isLoading}
         />
         <p className=' mt-2 text-center'>
           Already have an account?
@@ -83,9 +115,8 @@ function Signup() {
             Login
           </Link>
         </p>
-
       </form>
-    </div>
+    </div >
   );
 }
 

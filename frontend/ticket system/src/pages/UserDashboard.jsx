@@ -65,7 +65,7 @@ function UserDashboard() {
     <div className="max-w-4xl bg-gray-200 mx-auto mt-10 mb-6 p-6 rounded-lg shadow-md">
       <div className="flex flex-col justify-between items-center mb-6 sm:flex-row">
         <h2 className="text-2xl font-bold">User Dashboard</h2>
-        <h3 className="text-2xl font-bold">Welcome {user.username}!</h3>
+        <h3 className="text-xl font-bold">Welcome {user.username}!</h3>
 
         <button
           onClick={handleLogout}
