@@ -3,11 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/api';
 import { logout } from '../store/slices/authSlice';
+import Button from '../components/ui/Button'
+import InputField from '../components/ui/InputField';
+import BackendError from '../components/ui/BackendError';
+import axiosError from './axiosError';
 
 function UserDashboard() {
   const [tickets, setTickets] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -16,12 +22,11 @@ function UserDashboard() {
 
   useEffect(() => {
     if (!user) return; // Wait for rehydration
-
     const fetchTickets = async () => {
       setIsLoading(true);
       try {
-        const response = await api.get('/ticket'); 
-        setTickets(response.data.tickets); 
+        const response = await api.get('/ticket');
+        setTickets(response.data.tickets);
         setError('');
       } catch (error) {
         console.error('Failed to fetch tickets:', error);
@@ -33,12 +38,30 @@ function UserDashboard() {
     fetchTickets();
   }, [user]);
 
+  const handleTitleChange = (val) => {
+    setTitle(val)
+    setTitleError(
+      val === '' ? 'Title required' :
+      val.length < 5 ? 'Too short' : ''
+    )
+  }
+  const handleDescriptionChange = (val) => {
+    setDescription(val)
+    setDescriptionError(val === '' ? 'Description required' :
+      val.length < 10 ? 'Too short' : '')
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (titleError || descriptionError) {
+      const error = titleError ? 'Title is required' : 'Description is required'
+      return axiosError(error, setError)
+    }
     setIsLoading(true);
     try {
-      const response = await api.post('/ticket', { title, description }); 
-      setTickets([...tickets, response.data.ticket]); 
+      const response = await api.post('/ticket', { title, description });
+      setTickets([...tickets, response.data.ticket]);
       setTitle('');
       setDescription('');
       setError('');
@@ -74,37 +97,38 @@ function UserDashboard() {
           Logout
         </button>
       </div>
+
       <form onSubmit={handleSubmit} className="mb-8">
         <h3 className="text-xl font-semibold mb-4">Create a Ticket</h3>
-        {error && <p className="italic text-red-800 mb-4">{error}</p>}
+        <BackendError backendError={error} />
         <div className="mb-4">
-          <label className="block text-gray-700">Title</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border rounded"
-            required
+          <InputField
+            label={'Title'}
+            val={title}
+            error={titleError}
+            onChange={handleTitleChange}
           />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Description</label>
           <textarea
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => handleDescriptionChange(e.target.value)}
             className="w-full p-2 border rounded"
             required
           />
+          {descriptionError && <p className="italic text-red-500 text-sm">{descriptionError}</p>}
         </div>
-        <button
-          disabled={isLoading}
-          type="submit"
-          className={`bg-blue-600 text-white p-2 rounded hover:bg-blue-700 
-            ${isLoading ? 'cursor-not-allowed' : 'hover:bg-blue-800'}`}
-        >
-          {isLoading ? 'Please wait...' : 'Create Ticket'}
-        </button>
+
+        <div className=' max-w-52'>
+          <Button
+            type='submit'
+            btn={'Create Ticket'}
+            isLoading={isLoading}
+          />
+        </div>
       </form>
+
       <h3 className="text-xl font-semibold mb-4">My Tickets</h3>
       {isLoading ? (
         <div className="text-center">Loading tickets...</div>

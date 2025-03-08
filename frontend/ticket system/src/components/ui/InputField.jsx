@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InputField = ({ label, type, val, onChange, error }) => {
+const InputField = ({ label, type='text', val, onChange, error }) => {
 
   return (
     <div className="mb-4">
